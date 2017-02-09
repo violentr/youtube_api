@@ -1,0 +1,22 @@
+<div style="border: 1px solid grey;padding:10px 0px 10px 0px;height:auto;width:500px;">
+  <% if @items.is_a?(Array) %>
+    <% @items.each_with_index do |item, index| %>
+      <% snippet = item["snippet"] %>
+      <p>Published at:  <%= snippet["publishedAt"].to_date.strftime("%d-%m-%Y")%> </p>
+      <p >Channel id: <%= snippet["channelId"] %></p>
+      <button buttonId="<%= "#{index}" %>"> Post Details </button>
+      <div id="<%= "topic-details-#{index}" %>"style="display:none">
+        <p >Title: <%= snippet["title"] %></p>
+        <p >Description: <%= snippet["description"] %></p>
+        <% thumbnail = snippet["thumbnails"] %>
+        <p> <%= image_tag thumbnail["url"], width: thumbnail["width"], height: thumbnail["height"]%> </p>
+      </div>
+    <% end %>
+  <% else %>
+    <%= @items.inspect.html_safe %>
+  <% end %>
+</div>
+<%= javascript_tag "$('button').click(function(){
+    var id = parseInt($(this).attr('buttonId'))
+    $('#topic-details-' + id).toggle()})" %>
+
