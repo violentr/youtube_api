@@ -1,0 +1,2 @@
+development:
+  youtube_key: <%= ENV["YOUTUBE_API_KEY"] %>
