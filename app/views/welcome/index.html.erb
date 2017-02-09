@@ -1,18 +1,25 @@
+<div style="text-align:left;width:500px;">
+  <h3> This '<%= application_name %>' app collectes data from the <a href="http://www.youtube.com">www.youtube.com</a>
+    for the predefined channel
+  </h3>
+  <h4> Was used Youtube API, collected data was manipulated and presented as snippets list below</h4>
+</div>
 <div style="border: 1px solid grey;padding:10px 0px 10px 0px;height:auto;width:500px;">
   <% if @items.is_a?(Array) %>
     <% @items.each_with_index do |item, index| %>
       <% snippet = item["snippet"] %>
-      <p>Published at:  <%= snippet["publishedAt"].to_date.strftime("%d-%m-%Y")%> </p>
-      <p >Channel id: <%= snippet["channelId"] %></p>
-      <button buttonId="<%= "#{index}" %>"> Post Details </button>
+      <p>Published at:  <%= format_date snippet["publishedAt"] %> </p>
+      <p>Channel id: <%= snippet["channelId"] %></p>
+      <button buttonId="<%= "#{index}" %>"> Snippet Details </button>
       <div id="<%= "topic-details-#{index}" %>"style="display:none">
-        <p >Title: <%= snippet["title"] %></p>
-        <p >Description: <%= snippet["description"] %></p>
+        <p>Title: <%= snippet["title"] %></p>
+        <p>Description: <%= snippet["description"] %></p>
         <% thumbnail = snippet["thumbnails"] %>
         <p> <%= image_tag thumbnail["url"], width: thumbnail["width"], height: thumbnail["height"]%> </p>
       </div>
     <% end %>
   <% else %>
+    <p> Please make sure that your ENV["YOUTUBE_API_KEY"] set properly in config.yml file </p>
     <%= @items.inspect.html_safe %>
   <% end %>
 </div>
