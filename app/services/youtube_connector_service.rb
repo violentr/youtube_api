@@ -1,21 +1,21 @@
 class YoutubeConnector
   attr_reader :channel_id, :size, :api_key
 
-  def initialize(api_key, size=20, channel_id="")
+  def initialize(api_key, channel_id=nil, size=20)
     @api_key = api_key
+    @channel_id = channel_id || "UCVguiojKA6iobcySMJ5boNA"
     @size = size
-    @channel_id ||= "UCVguiojKA6iobcySMJ5boNA"
   end
 
   def process
-    get_data(url)
+    data = get_data(url)
+    format_for_frontend(data)
   end
 
   private
 
   def url
-    URI("https://www.googleapis.com/youtube/v3/search?key=#{api_key}&channelId
-              =#{channel_id}&part=snippet,id&order=date&maxResults=#{size}")
+    URI("https://www.googleapis.com/youtube/v3/search?key=#{api_key}&channelId=#{channel_id}&part=snippet,id&order=date&maxResults=#{size}")
   end
 
   def error
@@ -28,4 +28,13 @@ class YoutubeConnector
     JSON.parse(response.body).fetch("items")
   end
 
+  def format_for_frontend(data)
+    return data unless data.is_a?(Array)
+    data.each_with_object([]) do |item, array|
+      item = item.reject {|key, value| key != "snippet" }
+      options = item.dig("snippet", "thumbnails", "high")
+      item["snippet"]["thumbnails"] = options
+      array << item
+    end
+  end
 end

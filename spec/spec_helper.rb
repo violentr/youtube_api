@@ -1,5 +1,6 @@
 require_relative "../app/services/youtube_connector_service"
 require 'webmock/rspec'
+require 'support/data_helper'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
